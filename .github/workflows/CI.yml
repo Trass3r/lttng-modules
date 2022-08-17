@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu:rolling
     steps:
+    - run: apt install -y sudo
     - uses: actions/checkout@v3
     - uses: Trass3r/setup-cpp@master
     - uses: hendrikmuhs/ccache-action@v1.2
@@ -23,7 +24,6 @@ jobs:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
       run: |
-        apt install -y sudo
         git clone --depth=1 https://github.com/torvalds/linux.git
         ./scripts/built-in.sh linux/
         cd linux/
