@@ -13,7 +13,8 @@ jobs:
     steps:
     - run: apt update && apt install -y sudo
     - uses: actions/checkout@v3
-    - uses: actions/checkout@v3
+    - name: checkout kernel
+      uses: actions/checkout@v3
       with:
         repository: torvalds/linux
         path: linux
@@ -28,7 +29,8 @@ jobs:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
       run: |
-        sudo apt update && sudo apt install -y git build-essential flex bison
+        set -eux
+        sudo apt update && sudo apt install -y git build-essential flex bison libelf-dev
         ./scripts/built-in.sh linux/
         cd linux/
         make defconfig
@@ -36,7 +38,8 @@ jobs:
         ./scripts/config -d SPECULATION_MITIGATIONS
         ./scripts/config -e KALLSYMS -e KALLSYMS_ALL -e HIGH_RES_TIMERS -e FTRACE -e KPROBES -m LTTNG -e MODULES
         ./scripts/config -e LTTNG -d WERROR
-        make -j4
+        make config
+        make -j4 -k
     - uses: actions/upload-artifact@v3
       with:
         name: bzImage
