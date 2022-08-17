@@ -24,6 +24,7 @@ jobs:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
       run: |
+        sudo apt update && sudo apt install -y git build-essential flex bison
         git clone --depth=1 https://github.com/torvalds/linux.git
         ./scripts/built-in.sh linux/
         cd linux/
