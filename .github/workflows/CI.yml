@@ -30,15 +30,15 @@ jobs:
         KCFLAGS: '-march=skylake'
       run: |
         set -eux
-        sudo apt update && sudo apt install -y git build-essential flex bison bc libelf-dev liblz4-dev libssl-dev
+        sudo apt update && sudo apt install -y git build-essential flex bison bc libelf-dev lz4 libssl-dev
         #lttng/scripts/built-in.sh .
         make defconfig
         ./scripts/config -d XFS_FS -d NFS_FS -d NFSD -d BTRFS_FS -d F2FS_FS -d SUNRPC -d X86_X32 -d X86_16BIT -e CPU_FREQ -e CPU_FREQ_STAT -e CPU_FREQ_GOV_USERSPACE -e CPU_FREQ_GOV_ONDEMAND -e X86_INTEL_PSTATE -e SCHED_MC_PRIO -e PROFILING -e PERF_EVENTS_INTEL_UNCORE -e PERF_EVENTS_INTEL_RAPL -e PERF_EVENTS_INTEL_CSTATE -e ENERGY_MODEL -e INTEL_IDLE -e MODULE_COMPRESS_LZ4 -e KERNEL_LZ4 -e LD_DEAD_CODE_DATA_ELIMINATION -e BPF_JIT -d STACKPROTECTOR -e OPROFILE -e OPROFILE_EVENT_MULTIPLEX
         ./scripts/config -d SPECULATION_MITIGATIONS
         ./scripts/config -e KALLSYMS -e KALLSYMS_ALL -e HIGH_RES_TIMERS -e FTRACE -e KPROBES -m LTTNG -e MODULES
         ./scripts/config -e LTTNG -d WERROR
-        make config
-        make -j`nproc` -k
+        make CC="ccache gcc" -j`nproc` config
+        make CC="ccache gcc" -j`nproc` -k
     - uses: actions/upload-artifact@v3
       with:
         name: bzImage
