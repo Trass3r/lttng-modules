@@ -27,6 +27,7 @@ jobs:
     - name: build
       env:
         KCFLAGS: '-march=skylake'
+        KBUILD_BUILD_TIMESTAMP: ''
       run: |
         set -eux
         sudo apt update && sudo apt install -y git build-essential flex bison bc libelf-dev lz4 libssl-dev
@@ -36,7 +37,7 @@ jobs:
         ./scripts/config -d SPECULATION_MITIGATIONS
         ./scripts/config -e KALLSYMS -e KALLSYMS_ALL -e HIGH_RES_TIMERS -e FTRACE -e KPROBES -m LTTNG -e MODULES
         ./scripts/config -e LTTNG -d WERROR
-        make CC="ccache gcc" -j`nproc` config
+        make V=1 CC="ccache gcc" -j`nproc` config
         make CC="ccache gcc" -j`nproc` -k
     - uses: actions/upload-artifact@v3
       with:
